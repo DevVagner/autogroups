@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AutoGroups | Todos os posts</title>
+  <!-- Custom styles -->
+  <link rel="stylesheet" href="/css/admin/style.css">
+</head>
+
+<body>
+  <div class="layer"></div>
+  
+  <!-- ! Body -->
+  <div class="page-flex">
+
+    <!-- ! Sidebar -->
+    <%- include('../partials/sidebar-platform', {isAdmin: isAdmin}) %>
+
+    <div class="main-wrapper">
+      <!-- ! Main nav -->
+      <%- include('../partials/nav-platform', {isAdmin: isAdmin, title: "Todos os posts", notifications: notifications}) %>
+  
+      <!-- ! Main -->
+        <main class="main users chart-page" id="skip-target">
+          <% if (posts.length > 0) { %>
+          <div class="container">
+            <div class="row">
+              <div class="col-lg">
+                <div class="users-table table-wrapper">
+                    <table class="posts-table">
+                      <thead>
+                        <tr class="users-table-info">
+                          <th>Thumbnail</th>
+                          <th>Descrição</th>
+                          <th>Conta</th>
+                          <th>Páginas e Grupos</th>
+                          <th>Plataforma</th>
+                          <th>Status</th>
+                          <th>Data</th>
+                        </tr>
+                      </thead>
+                        <tbody>
+                          <% posts.forEach(function(item) { %>
+                            <tr>
+                              <td>
+                                <div class="categories-table-img">
+                                  <% if (item.image == "program_image") { %>
+                                    <picture><source srcset="/img/admin/program.png"><img style="width: 57px !important" src="/img/admin/program.png" alt="img"></picture>
+                                  <% } else if (item.image == "link") { %>
+                                    <picture><source srcset="/img/admin/link.png"><img src="/img/admin/link.png" alt="img"></picture>
+                                  <% } else { %>
+                                    <picture><source srcset="<%= item.image %>"><img src="<%= item.image %>" alt="img"></picture>
+                                  <% } %>
+                                </div>
+                              </td>
+                              <td>
+                                <p style="width: 140px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><%= item.content %></p>
+                              </td>
+                              <td>
+                                <div class="pages-table-img">
+                                  <picture><source srcset="<%= item.image_account %>" type="image/webp"><img src="<%= item.image_account %>" alt="User Name"><%= item.name_account %></picture>
+                                </div>
+                              </td>
+                              <td>
+                                <%= item.groups_ids.length + item.pages_ids.length %> (Total)
+                              </td>
+                              <% if (item.platform == "Facebook") { %>
+                                <td>
+                                  <div style="color: #1877F2; font-weight: bold;">
+                                    <%= item.platform %>
+                                  </div>
+                                </td>
+                              <% } else { %>
+                                <td>
+                                  <div style="font-weight: bold; color: #C21F70">
+                                    <%= item.platform %>
+                                  </div>
+                                </td>
+                              <% } %>    
+                              <% if(item.program_post == true) { %>
+                                <td><span class="badge badge-pill badge-active">Programado</span></td>
+                                <td><%= item.day %> <%= item.hour %></td>
+                              <% } else { %>
+                                <td><span class="badge badge-pill badge-success">Publicado</span></td>
+                                <td>Sucesso</td>
+                              <% } %>
+                            </tr>
+                          <% }); %>
+                        </tbody>
+                    </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <% } else { %>
+            <div class="alert" style="display: none;"></div>
+            <div class="empty">
+              <img src="/img/admin/post.png" height="60" alt=""><br>
+              <h2 style="color: rgba(90, 35, 218, 0.973)">Nenhuma publicação adicionada.</h2>
+              <button style="padding: 13px 50px !important; margin-top: 30px;" class="event" id="btn-open"><a href="/platform/post_facebook">Criar publicação</a></button>
+            </div>
+          <% } %>
+        </main>
+      <!-- ! Footer -->
+      <%- include('../partials/footer-platform') %>
+    </div>
+  </div>
+</body>
+</html>
+
+<!-- Chart library -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- Icons library -->
+<script src="js/admin/feather.min.js"></script>

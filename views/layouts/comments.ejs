@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>pluBee | Bot de comentários</title>
+  <!-- Favicon -->
+  <link rel="shortcut icon" href="/img/site/plubee-icon.png" type="image/x-icon">
+  <!-- Custom styles -->
+  <link rel="stylesheet" href="/css/admin/style.css">
+  <link rel="stylesheet" href="/css/platform/comments.css">
+</head>
+
+<body>
+  <div class="layer"></div>
+  <!-- ! Body -->
+  <div class="page-flex">
+
+    <!-- ! Sidebar -->
+    <%- include('../partials/sidebar-platform', {isAdmin: isAdmin}) %>
+
+    <div class="main-wrapper">
+      <!-- ! Main nav -->
+      <%- include('../partials/nav-platform', {isAdmin: isAdmin, title: "Comentários automáticos", notifications: notifications}) %>
+
+      <div class="enable" style="display: flex; align-items: initial;">
+        <div style="margin-top: 130px;">
+          <h1 class="enable-h1"></h1>
+          <p class="enable-p"></p>
+          <h3>Contéudo do comentário</h3>
+          <textarea type="text" style="width: 100%;" name="content" id="content-input" placeholder="Que legal o seu comentário!"></textarea><br>
+
+          <h3>Limite de comentários</h3>
+          <% if (type_account == "Avançado") { %>
+            <input type="text" style="width: 100%;" name="limit" placeholder="Digite a quantidade" id="limit-input">
+          <% } else { %>
+            <input type="text" style="width: 100%;" name="limit" placeholder="Até 1000 comentários" id="limit-input">
+          <% } %>
+          <br>
+          <button class="event" id="btn-active" style="padding: 12px;" onclick="activeComment()">Ativar</button>
+          <button class="event" id="btn-close" style="padding: 12px;" onclick="setHide()">Fechar</button>
+        </div>
+      </div>
+  
+      <!-- ! Main -->
+      <% if (posts.length > 0) { %>
+      <main class="main users chart-page" id="skip-target">
+        <div class="container">
+          <div class="alert" style="display: none;"></div>
+          <div class="error" style="display: none;"></div>
+
+          <div>
+            <h2 style="margin: 5px 0 14px 0;">Os comentários serão respondidos apenas em páginas.</h2>
+          </div>
+
+          <div class="row">
+            <div class="col-lg">
+              <div class="users-table table-wrapper">
+                <table class="posts-table">
+                  <thead>
+                    <tr class="users-table-info">
+                      <th style="font-weight: bold">
+                        <label class="users-table__checkbox">
+                          Thumbnail
+                        </label>
+                      </th>
+                      <th>Descrição</th>
+                      <th>Conta</th>
+                      <th>Páginas e Grupos</th>
+                      <th>Plataforma</th>
+                      <th>Status</th>
+                      <th>Ações</th>
+                      <th>Conteúdo</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% posts.forEach(function(item) { %>
+                      <% if (item.program_post == false) { %>
+                        <tr>
+                          <td>
+                            <div class="categories-table-img">
+                              <% if (item.image == "program_image") { %>
+                                <picture><source srcset="/img/admin/program.png"><img style="width: 57px !important" src="/img/admin/program.png" alt="img"></picture>
+                              <% } else if (item.image == "link") { %>
+                                <picture><source srcset="/img/admin/link.png"><img src="/img/admin/link.png" alt="img"></picture>
+                              <% } else { %>
+                                <picture><source srcset="<%= item.image %>"><img src="<%= item.image %>" alt="img"></picture>
+                              <% } %>                        </div>
+                          </td>
+                          <td>
+                            <p style="width: 140px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><%= item.content %></p>
+                          </td>
+                          <td>
+                            <div class="pages-table-img">
+                              <picture><source srcset="<%= item.image_account %>" type="image/webp"><img src="<%= item.image_account %>" alt="User Name"><%= item.name_account %></picture>
+                          
+                            </div>
+                          </td>
+                          <td><%= item.groups_ids.length + item.pages_ids.length %> (Total)</td>
+                          <td style="color: #1877F2"><%= item.platform %></td>
+                          <% if (item.status_bot == true) { %>
+                          <td><span class="badge badge-pill badge-success">Ativado</span></td>
+                          <td>
+                            <button class="event" onclick="disableComment('<%= item.id_post %>', '<%= item.id_account %>')">Desativar comentário</button>
+                          </td>
+                          <td><p style="font-weight: bold; width: 105px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><%= item.comment_content %></p></td>
+                          <% } else { %>
+                          <td><span class="badge-active">Desativado</span></td>
+                          <td>
+                            <button class="event" id="btn-open" onclick="openDiv('<%= item.id_post %>', '<%= item.platform %>')">Ativar comentários</button>
+                          </td>
+                          <td>Não ativado</td>
+                          <% } %>
+                        </tr>
+                      <% } %>
+                    <% }); %>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+      </main>
+      <% } else { %>
+      <div class="alert" style="display: none;"></div>
+      <div class="empty">
+        <img src="/img/admin/post.png" height="60" alt=""><br>
+        <h2 style="color: #752a7a">Nenhuma publicação adicionada.</h2>
+        <button style="padding: 13px 50px !important; margin-top: 30px;" class="event" id="btn-open"><a href="/platform/post_facebook">Criar publicação</a></button>
+      </div>
+      <% } %>
+      
+
+      <!-- ! Footer -->
+      <%- include('../partials/footer-platform') %>
+      
+    </div>
+  </div>
+
+
+<!-- Chart library -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- Icons library -->
+<script src="js/admin/feather.min.js"></script>
+</body>
+
+<script>
+  const btnActive = document.querySelector('#btn-active')
+  const btnOpen = document.querySelector('#btn-open')
+  const btnClose = document.querySelector('#btn-close')
+  const enable = document.querySelector('.enable')
+  const enableH1 = document.querySelector('.enable-h1')
+  const enableP = document.querySelector('.enable-p')
+  const content = document.querySelector('#content-input')
+  const limit = document.querySelector('#limit-input')
+  let idPost = ""
+  let platformPost = ""
+
+  enable.style.display = "none"
+
+  function openDiv(id_post, platform) {
+    enable.style.display = "flex"
+    enableH1.innerHTML = "Ativar comentários automáticos"
+
+    idPost = id_post
+    platformPost = platform
+
+    window.scrollTo(0, 0);
+  }
+
+  function activeComment() {
+    const type_account = '<%= type_account %>'
+
+    if (Number(limit.value)) {
+      if (type_account == "Avançado") {
+        fetch("comments-automatic/config", {
+          method: "PUT",
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id_post: idPost, platform: platformPost, content_comment: content.value, limit_comments: limit.value })
+        })
+        .then(response => {
+          if (response.ok) {
+            const divMessage = document.querySelector(".alert");
+            divMessage.style.display = "flex";
+            divMessage.innerHTML = "";
+            const message = document.createElement("p");
+            const img = document.createElement("img");
+            img.src = "/img/platform/checked.png"
+            img.width = "28"
+            img.height = "28"
+            message.classList.add("message-notify");
+            message.innerText = "Bot ativado com sucesso.";
+            divMessage.appendChild(img);
+            divMessage.appendChild(message);
+
+            setTimeout(() => {
+              enable.style.display = "none"
+              divMessage.style.display = "none";
+              location.reload()
+            }, 1500);
+          }
+        })
+        .catch(error => console.error(error));
+      } else {
+        if (limit.value > 1000) {
+          const divMessage = document.querySelector(".error");
+          divMessage.style.display = "flex";
+          divMessage.innerHTML = "";
+          const message = document.createElement("p");
+          const img = document.createElement("img");
+          img.src = "/img/admin/Bulk/error.png"
+          img.width = "28"
+          img.height = "28"
+          message.classList.add("message-notify");
+          message.innerText = "O limite não pode passar de 1000.";
+          divMessage.appendChild(img);
+          divMessage.appendChild(message);
+
+          setTimeout(() => {
+            divMessage.style.display = "none";
+          }, 1500);
+        } else {
+          fetch("comments-automatic/config", {
+            method: "PUT",
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id_post: idPost, platform: platformPost, content_comment: content.value, limit_comments: limit.value })
+          })
+          .then(response => {
+            if (response.ok) {
+              const divMessage = document.querySelector(".alert");
+              divMessage.style.display = "flex";
+              divMessage.innerHTML = "";
+              const message = document.createElement("p");
+              const img = document.createElement("img");
+              img.src = "/img/platform/checked.png"
+              img.width = "28"
+              img.height = "28"
+              message.classList.add("message-notify");
+              message.innerText = "Bot ativado com sucesso.";
+              divMessage.appendChild(img);
+              divMessage.appendChild(message);
+
+              setTimeout(() => {
+                enable.style.display = "none"
+                divMessage.style.display = "none";
+                location.reload()
+              }, 1500);
+            }
+          })
+          .catch(error => console.error(error));
+        }
+      }
+    } else {
+      const divMessage = document.querySelector(".error");
+      divMessage.style.display = "flex";
+      divMessage.innerHTML = "";
+      const message = document.createElement("p");
+      const img = document.createElement("img");
+      img.src = "/img/admin/Bulk/error.png"
+      img.width = "28"
+      img.height = "28"
+      message.classList.add("message-notify");
+      message.innerText = "O valor deve ser um número.";
+      divMessage.appendChild(img);
+      divMessage.appendChild(message);
+
+      setTimeout(() => {
+        divMessage.style.display = "none";
+      }, 1500);
+    }
+  }
+
+  function disableComment(id_post) {
+    fetch("comments-automatic/delete/" + id_post, {
+        method: "DELETE",
+        headers: { 'Content-Type': 'application/json' },
+    }).then(response => response.ok)
+      .then(data => {
+        if (data) {
+          location.reload()
+        }
+      })
+      .catch(error => console.error(error));
+  }
+
+  function setHide() {
+    enable.style.display = "none"
+    count = 0
+  }
+</script>
+
+</html>

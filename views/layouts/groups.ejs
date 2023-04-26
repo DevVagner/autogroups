@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AutoGroups | Todos os posts</title>
+  <!-- Custom styles -->
+  <link rel="stylesheet" href="/css/admin/style.css">
+</head>
+
+<body>
+  <div class="layer"></div>
+  
+  <!-- ! Body -->
+  <div class="page-flex">
+
+    <!-- ! Sidebar -->
+    <%- include('../partials/sidebar-platform', {isAdmin: isAdmin}) %>
+
+    <div class="main-wrapper">
+      <!-- ! Main nav -->
+      <%- include('../partials/nav-platform', {isAdmin: isAdmin, title: "Grupos importados", notifications: notifications}) %>
+  
+      <!-- ! Main -->
+      <% if (groups.length > 0) { %>
+      <main class="main users chart-page" id="skip-target">
+        <div class="container">
+          <div class="row" style="margin-top: 16px">
+            <% groups.forEach(function(group) { %>
+              <div class="col-md-6 col-xl-3">
+                <article class="stat-cards-item">
+                  <div class="stat-cards-icon">
+                    <% if (group.image != '') { %>
+                      <img style="border-radius: 4px; height: 3rem; margin-bottom: 5px;" src="<%= group.image %>" alt="">
+                    <% } else { %>
+                      <img style="height: 3rem" src="/img/admin/Bulk/groups.png" alt="">
+                    <% } %>
+                  </div>
+                  <div class="stat-cards-info">
+                    <p class="stat-cards-info__num"><%= group.name %></p>
+                    <% if (group.description) { %>
+                      <p class="stat-cards-info__title description-group" style="width: 270px; height: 20px; overflow: hidden; text-overflow: ellipsis;"><%= group.description %></p>
+                    <% } else { %>
+                      <p class="stat-cards-info__title description-group" style="width: 270px; height: 20px; overflow: hidden; text-overflow: ellipsis;">Sem descrição</p>
+                    <% } %>
+                    <p class="stat-cards-info__progress">
+                      ID do grupo: <%= group.id %>
+                    </p>
+                    <p class="stat-cards-info__progress" style="font-weight: bold; color: #1877F2; margin-top: 4px;">
+                      Conta: <%= group.account_name %>
+                    </p>
+                  </div>
+                </article>
+              </div>
+            <% }) %>
+          </div>
+        </div>
+      </main>
+      <% } else { %>
+      <div class="empty">
+        <img src="/img/admin/groups.png" height="60" alt=""><br>
+        <h2 style="color: rgba(90, 35, 218, 0.973)">Nenhum grupo importado ainda.</h2>
+        <button style="padding: 13px 50px !important; margin-top: 30px;" class="event" id="btn-open"><a href="/platform/accounts">Adicionar conta</a></button>
+      </div>
+      <% } %>
+
+      <!-- ! Footer -->
+      <%- include('../partials/footer-platform') %>
+    </div>
+  </div>
+
+
+<!-- Chart library -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- Icons library -->
+<script src="js/admin/feather.min.js"></script>
+</body>
+</html>

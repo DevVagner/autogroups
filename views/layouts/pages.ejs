@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AutoGroups | Todos os posts</title>
+  <!-- Custom styles -->
+  <link rel="stylesheet" href="/css/admin/style.css">
+</head>
+
+<body>
+  <div class="layer"></div>
+  
+  <!-- ! Body -->
+  <div class="page-flex">
+
+    <!-- ! Sidebar -->
+    <%- include('../partials/sidebar-platform', {isAdmin: isAdmin}) %>
+
+    <div class="main-wrapper">
+      <!-- ! Main nav -->
+      <%- include('../partials/nav-platform', {isAdmin: isAdmin, title: "Páginas importadas", notifications: notifications}) %>
+  
+      <!-- ! Main -->
+      <% if (pages.length > 0) { %>
+      <main class="main users chart-page" id="skip-target">
+        <div class="container">
+          <div class="row" style="margin-top: 16px">
+            <% pages.forEach(function(item) { %>
+              <% item.pages.forEach(function(page) { %>
+                <div class="col-md-6 col-xl-3">
+                  <article class="stat-cards-item">
+                    <div class="stat-cards-icon warning">
+                      <img style="border-radius: 5rem;" src="<%= page.image %>" alt="">
+                    </div>
+                    <div class="stat-cards-info">
+                      <p class="stat-cards-info__num"><%= page.name %></p>
+                      <p class="stat-cards-info__title description-group">ID da página:</p>
+                      <p class="stat-cards-info__title description-group"><%= page.id_page %></p>
+                      <p class="stat-cards-info__title description-group" style="font-weight: bold; color: #1877F2">Conta: <%= item.name %></p>
+                    </div>
+                  </article>
+                </div>
+              <% }) %>
+            <% }) %>
+          </div>
+        </div>
+      </main>
+      <% } else { %>
+      <div class="empty">
+        <img src="/img/admin/page.png" height="60" alt=""><br>
+        <h2 style="color: rgba(90, 35, 218, 0.973)">Nenhuma página importada ainda.</h2>
+        <p style="margin-top: 4px;">Você precisa adicionar uma conta para ver as suas páginas.</p>
+        <button style="padding: 13px 50px !important; margin-top: 30px;" class="event" id="btn-open"><a href="/platform/accounts">Adicionar conta</a></button>
+      </div>
+      <% } %>
+
+      <!-- ! Footer -->
+      <%- include('../partials/footer-platform') %>
+    </div>
+  </div>
+
+
+<!-- Chart library -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- Icons library -->
+<script src="js/admin/feather.min.js"></script>
+</body>
+</html>

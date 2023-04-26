@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AutoGroups | Contas conectadas</title>
+  <!-- Custom styles -->
+  <link rel="stylesheet" href="/css/admin/style.css">
+</head>
+
+<body>
+  <div class="layer"></div>
+  
+  <!-- ! Body -->
+  <div class="page-flex">
+
+    <!-- ! Sidebar -->
+    <%- include('../partials/sidebar-platform', {isAdmin: isAdmin}) %>
+
+    <div class="main-wrapper">
+      <!-- !  Main nav -->
+      <%- include('../partials/nav-platform', {isAdmin: isAdmin, title: "Usuários cadastrados na plataforma:", notifications: notifications}) %>
+  
+      <!-- ! Main -->
+      <main class="main users chart-page" id="skip-target">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg">
+              <div class="users-table table-wrapper">
+                <table class="posts-table">
+                  <thead>
+                    <tr class="users-table-info">
+                      <th>Nome</th>
+                      <th>Email</th>
+                      <th>Number</th>
+                      <th>CPF</th>
+                      <th>Senha:</th>
+                      <th>Tipo de conta</th>
+                      <th>Data de cadastro</th>
+                      <th>Bloqueado</th>
+                      <th>Ações</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% users.forEach(function(item) { %>
+                      <tr>
+                        <td>
+                          <div>
+                            <%= item.name %>
+                          </div>
+                        </td>
+
+                        <td>
+                          <div>
+                            <%= item.email %>
+                          </div>
+                        </td>
+                        
+                        <td>
+                          <div>
+                            <%= item.number %>
+                          </div>
+                        </td>
+
+                        <td>
+                          <div>
+                            <%= item.cpf %>
+                          </div>
+                        </td>
+
+                        <td>
+                          <div>
+                            <%= item.password %>
+                          </div>
+                        </td>
+
+                        <td>
+                          <div>
+                            <%= item.type_account %>
+                          </div>
+                        </td>
+                        
+                        <td>
+                          <div>
+                            <%= item.date %>
+                          </div>
+                        </td>
+
+                        <% if (item.isBloqued == false) { %>
+                          <td>
+                            <div style="font-weight: bold; color: rgb(52, 175, 15);">
+                              Não
+                            </div>
+                          </td>
+                        <% } else { %>
+                          <td>
+                            <div style="font-weight: bold; color: rgb(194, 18, 18);">
+                              Sim
+                            </div>
+                          </td>
+                        <% } %>
+
+                        <td>
+                          <div>
+                            <% if (item.isBloqued == false) { %>
+                              <button class="event" onclick="blockUser('<%= item._id %>')">Bloquear</button>
+                            <% } else { %>
+                              <button class="event" onclick="unlockUser('<%= item._id %>')">Desbloquear</button>
+                            <% } %>
+                            <button class="event" onclick="deleteUser('<%= item._id %>')">Excluir</button>
+                            <a href="/platform/users/<%= item._id %>"><button class="event">Modificar</button></a>
+                          </div>
+                        </td>
+                      </tr>
+                    <% }); %>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- <div class="col-lg-3" style="margin-top: 3rem">
+              <article class="white-block">
+                <div class="top-cat-title">
+                  <h3>Filtrar</h3>
+                  <p style="font-size: 15px;">Total de usuários: 100</p>
+                </div>
+                <input type="text" placeholder="Enter keywords ..." style="margin-bottom: 18px;" required>
+                <div style="display: flex; justify-content: space-between; margin: 10px 0px">
+                  <p>Todos os usuários</p>
+                  <input type="checkbox" name="Plano Pro" id="" class="check" checked>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin: 10px 0px">
+                  <p>Usuários com plano Básico</p>
+                  <input type="checkbox" name="Plano Pro" id="" class="check">
+                </div>
+                <div style="display: flex; justify-content: space-between; margin: 10px 0px">
+                  <p>Usuários com plano Avançado</p>
+                  <input type="checkbox" name="Plano Pro" id="" class="check">
+                </div>
+                <div style="display: flex; justify-content: space-between; margin: 10px 0px">
+                  <p>Usuários com plano Pro</p>
+                  <input type="checkbox" name="Plano Pro" id="" class="check">
+                </div>
+                <div style="display: flex; justify-content: space-between; margin: 10px 0px">
+                  <p>Usuários bloqueados</p>
+                  <input type="checkbox" name="Plano Pro" id="" class="check">
+                </div>
+                <div style="display: flex; justify-content: space-between; margin: 10px 0px">
+                  <p>Usuários com plano Pro</p>
+                  <input type="checkbox" name="Plano Pro" id="" class="check">
+                </div>
+                <br>
+                <button style="color: #FFFFFF; background-color: #752A7A; padding: 10px; border-radius: 10px">Filtrar usuários</button>
+              </article>
+            </div> -->
+          </div>
+        </div>
+      </main>
+
+      <%- include('../partials/footer-platform') %>
+    </div>
+  </div>
+
+
+<!-- Chart library -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- Icons library -->
+<script src="js/admin/feather.min.js"></script>
+</body>
+</html>
+
+<script>
+  var _0x6a64=["\x75\x73\x65\x72\x73\x2F\x62\x6C\x6F\x63\x6B\x2F","\x50\x4F\x53\x54","\x61\x70\x70\x6C\x69\x63\x61\x74\x69\x6F\x6E\x2F\x6A\x73\x6F\x6E","\x72\x65\x6C\x6F\x61\x64","\x75\x73\x65\x72\x73\x2F\x75\x6E\x6C\x6F\x63\x6B\x2F","\x75\x73\x65\x72\x73\x2F\x64\x65\x6C\x65\x74\x65\x2F","\x44\x45\x4C\x45\x54\x45"];function blockUser(_0x37d6x2){fetch(_0x6a64[0]+ _0x37d6x2,{method:_0x6a64[1],headers:{'\x43\x6F\x6E\x74\x65\x6E\x74\x2D\x54\x79\x70\x65':_0x6a64[2]}});location[_0x6a64[3]]()}function unlockUser(_0x37d6x2){fetch(_0x6a64[4]+ _0x37d6x2,{method:_0x6a64[1],headers:{'\x43\x6F\x6E\x74\x65\x6E\x74\x2D\x54\x79\x70\x65':_0x6a64[2]}});location[_0x6a64[3]]()}function deleteUser(_0x37d6x2){fetch(_0x6a64[5]+ _0x37d6x2,{method:_0x6a64[6],headers:{'\x43\x6F\x6E\x74\x65\x6E\x74\x2D\x54\x79\x70\x65':_0x6a64[2]}});location[_0x6a64[3]]()}
+</script>

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AutoGroups | Contas conectadas</title>
+  <!-- Custom styles -->
+  <link rel="stylesheet" href="/css/admin/style.css">
+</head>
+
+<body>
+  <div class="layer"></div>
+  
+  <!-- ! Body -->
+  <div class="page-flex">
+
+    <!-- ! Sidebar -->
+    <%- include('../partials/sidebar-platform', {isAdmin: isAdmin}) %>
+
+    <div class="main-wrapper">
+      <!-- ! Main nav -->
+      <%- include('../partials/nav-platform', {isAdmin: isAdmin, title: "Contas cadastradas", notifications: notifications}) %>
+  
+      <!-- ! Main -->
+      <main class="main users chart-page" id="skip-target">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg">
+              <% if (accounts.length > 0) { %>
+              <div class="users-table table-wrapper">
+                <table class="posts-table">
+                  <thead>
+                    <tr class="users-table-info">
+                      <th style="font-weight: bold">
+                        <label class="users-table__checkbox">
+                          ID da conta
+                        </label>
+                      </th>
+                      <th>Foto</th>
+                      <th>Nome da conta</th>
+                      <th>Plataforma</th>
+                      <th>Data de cadastro</th>
+                      <th>Ações</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% accounts.forEach(function(item) { %>
+                      <tr>
+                        <td>
+                          <div style="font-weight: bold">
+                            <%= item.id_account %>
+                          </div>
+                        </td>
+
+                        <td>
+                          <div class="categories-table-img">
+                            <img src="<%= item.photo %>" alt="foto-de-perfil" style="width: 40px; height: 40px; border-radius: 50px;">
+                          </div>
+                        </td>
+
+                        <td>
+                          <div>
+                            <%= item.name %>
+                          </div>
+                        </td>
+
+                        <% if (item.platform == "Facebook") { %>
+                          <td>
+                            <div style="color: #1877F2; font-weight: bold;">
+                              <%= item.platform %>
+                            </div>
+                          </td>
+                        <% } else { %>
+                          <td>
+                            <div style="font-weight: bold; color: #C21F70">
+                              <%= item.platform %>
+                            </div>
+                          </td>
+                        <% } %>
+                        <td>
+                          <div>
+                            <%= item.date %>
+                          </div>
+                        </td>
+
+                        <td>
+                          <div> 
+                            <button class="event" id="delete-account" onclick="deleteAccount('<%= item.id_account %>', '<%= item.platform %>')">Excluir conta</button>
+                          </div>
+                        </td>                                                    
+                      </tr>
+                    <% }); %>
+                  </tbody>
+                </table>
+              </div>
+              <% } else { %>
+              <div class="empty empty-account">
+                <img src="/img/admin/accounts.png" height="60" alt=""><br>
+                <h2 style="color: rgba(90, 35, 218, 0.973)">Nenhuma conta adicionada.</h2>
+              </div>
+              <% } %>
+            </div>
+
+            <div class="col-lg-3 account-col" style="margin-top: 3rem">
+              <article class="white-block">
+                <a href="accounts/auth/facebook/"><button style="width: 100%; color: #FFFFFF; background-color: rgba(90, 35, 218, 0.973); padding: 10px; border-radius: 10px">Adicionar conta Facebook</button></a>
+              </article>
+
+              <!-- <article class="white-block">
+                <button style="color: #FFFFFF; background-color: #777777; padding: 10px; border-radius: 10px">Adicionar conta Instagram</button>
+              </article> -->
+
+              <article class="white-block">
+                <div class="top-cat-title">
+                  <h3>Contas cadastradas</h3>
+                  <% if (total_accounts === 1) { %>
+                    <p style="font-size: 16px; color: rgba(90, 35, 218, 0.973);"><%= total_accounts %> conta cadastrada.</p>
+                  <% } else if (total_accounts > 1) { %>
+                    <p style="font-size: 16px; color: rgba(90, 35, 218, 0.973);"><%= total_accounts %> contas cadastradas.</p>
+                  <% } else { %>
+                    <p style="font-size: 16px; color: rgba(90, 35, 218, 0.973);">Nenhuma conta cadastrada ainda.</p>
+                  <% } %>
+                </div>
+              </article>
+
+              <article class="white-block">
+                <div class="top-cat-title">
+                  <h3>Contas restantes</h3>
+                  <% if (accountsRemaining == 1) { %>
+                    <p style="font-size: 16px; color: rgba(90, 35, 218, 0.973);"><%= accountsRemaining %> conta restante.</p>
+                  <% } else if (accountsRemaining > 1) { %>
+                    <p style="font-size: 16px; color: rgba(90, 35, 218, 0.973);"><%= accountsRemaining %> contas restantes.</p>
+                  <% } else { %>
+                    <p style="font-size: 16px; color: rgba(90, 35, 218, 0.973);"><%= accountsRemaining %></p>
+                  <% } %>
+                </div>
+              </article>
+
+              <% if (type_account != "Avançado") { %>
+                <article class="white-block" style="background-color: #f5f100;">
+                  <div class="top-cat-title">
+                    <h3>Faça upgrade da sua conta</h3>
+                    <p style="color: #8f8f8f; font-size: 14px;">Faça upgrade para cadastrar mais contas</p>
+                  </div>
+                </article>
+              <% } else { %>
+                <article class="white-block" style="background-color: #f5f100;">
+                  <div class="top-cat-title">
+                    <h3>Seu plano oferece contas ilimitadas</h3>
+                    <p style="color: #8f8f8f; font-size: 14px;">Aproveite todos os benefícios do seu plano.</p>
+                  </div>
+                </article>
+              <% } %>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <%- include('../partials/footer-platform') %>
+    </div>
+  </div>
+
+
+<!-- Chart library -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- Icons library -->
+<script src="js/admin/feather.min.js"></script>
+</body>
+</html>
+
+<script>
+var _0x4aff=["\x61\x63\x63\x6F\x75\x6E\x74\x73\x2F\x64\x65\x6C\x65\x74\x65\x2F","\x44\x45\x4C\x45\x54\x45","\x61\x70\x70\x6C\x69\x63\x61\x74\x69\x6F\x6E\x2F\x6A\x73\x6F\x6E","\x73\x74\x72\x69\x6E\x67\x69\x66\x79","\x72\x65\x6C\x6F\x61\x64"];function deleteAccount(_0x61bcx2,_0x61bcx3){fetch(_0x4aff[0]+ _0x61bcx2,{method:_0x4aff[1],headers:{'\x43\x6F\x6E\x74\x65\x6E\x74\x2D\x54\x79\x70\x65':_0x4aff[2]},body:JSON[_0x4aff[3]]({platform:_0x61bcx3})});setTimeout(()=>{location[_0x4aff[4]]()},2000)}
+</script>
